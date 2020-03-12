@@ -5,6 +5,8 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
+// Returns the count of one-character-wide glyphs that this string
+// represents.
 func MonoWidth(input string) int {
 
 	s := norm.NFD.String(input)
