@@ -76,13 +76,16 @@ type PrintedWord struct {
 // put spaces between words.
 
 func Wrap(text string, maxWidth int) []string {
-	lines := make([]string, 0)
 	words := WhitespaceSplit(text)
+	return WrapPrintedWords(words, maxWidth)
+}
+
+func WrapPrintedWords(words []*PrintedWord, maxWidth int) []string {
+	lines := make([]string, 0)
 
 	line := ""
 	llen := 0
 	for _, word := range words {
-//		fmt.Printf("llen=%d word=%s\n", llen, word.text)
 		if llen == 0 {
 			line = word.text
 			llen = word.width
