@@ -1,11 +1,9 @@
 // Copyright (c) 2020 by Gilbert Ramirez <gram@alumni.rice.edu>
 package unicodemonowidth
 
-/*
 import (
-	"fmt"
+	"unicode"
 )
-*/
 
 type nwsIterator struct {
 	runes []rune
@@ -24,7 +22,7 @@ func NewNWSIterator(text string) *nwsIterator {
 	// Find the first non-whitespace
 	for s.pos = 0; s.pos < s.length; s.pos++ {
 		r := s.runes[s.pos]
-		if r == ' ' || r == '\n' || r == '\t' || r == '\r' {
+		if unicode.IsSpace(r) {
 			continue
 		} else {
 			break
@@ -47,7 +45,7 @@ func (s *nwsIterator) Next() string {
 	var i int
 	for i = start; i < s.length; i++ {
 		r := s.runes[i]
-		if r == ' ' || r == '\n' || r == '\t' || r == '\r' {
+		if unicode.IsSpace(r) {
 			break
 		}
 	}
@@ -56,7 +54,7 @@ func (s *nwsIterator) Next() string {
 	// Find the first non-whitespace
 	for s.pos = end; s.pos < s.length; s.pos++ {
 		r := s.runes[s.pos]
-		if r == ' ' || r == '\n' || r == '\t' || r == '\r' {
+		if unicode.IsSpace(r) {
 			continue
 		} else {
 			break
@@ -66,18 +64,9 @@ func (s *nwsIterator) Next() string {
 	return string(s.runes[start:end])
 }
 
-type printedWord struct {
+type PrintedWord struct {
 	text string
 	width int
-}
-
-// http://github.com/jaroslov/knuth-plass-thoughts/blob/mbaster/plass.md
-
-type plassEntry struct {
-	first int
-	last int
-	next int
-	score int
 }
 
 // Split a string into multiple strings, breaking on whitespace,
@@ -88,7 +77,7 @@ type plassEntry struct {
 
 func Wrap(text string, maxWidth int) []string {
 	lines := make([]string, 0)
-	words := createWords(text)
+	words := WhitespaceSplit(text)
 
 	line := ""
 	llen := 0
@@ -113,12 +102,12 @@ func Wrap(text string, maxWidth int) []string {
 	return lines
 }
 
-func createWords(text string) []*printedWord {
+func WhitespaceSplit(text string) []*PrintedWord {
 	it := NewNWSIterator(text)
 
-	words := make([]*printedWord, 0)
+	words := make([]*PrintedWord, 0)
 	for item := it.Next(); item != "" ; item = it.Next() {
-		words = append(words, &printedWord{
+		words = append(words, &PrintedWord{
 			text: item,
 			width: MonoWidth(item),
 		})
