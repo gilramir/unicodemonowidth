@@ -65,8 +65,8 @@ func (s *nwsIterator) Next() string {
 }
 
 type PrintedWord struct {
-	text string
-	width int
+	Text string
+	Width int
 }
 
 // Split a string into multiple strings, breaking on whitespace,
@@ -87,15 +87,15 @@ func WrapPrintedWords(words []*PrintedWord, maxWidth int) []string {
 	llen := 0
 	for _, word := range words {
 		if llen == 0 {
-			line = word.text
-			llen = word.width
-		} else if llen + 1 + word.width > maxWidth {
+			line = word.Text
+			llen = word.Width
+		} else if llen + 1 + word.Width > maxWidth {
 			lines = append(lines, line)
-			line = word.text
-			llen = word.width
+			line = word.Text
+			llen = word.Width
 		} else {
-			line += " " + word.text
-			llen += 1 + word.width
+			line += " " + word.Text
+			llen += 1 + word.Width
 		}
 	}
 	if llen > 0 {
@@ -111,8 +111,8 @@ func WhitespaceSplit(text string) []*PrintedWord {
 	words := make([]*PrintedWord, 0)
 	for item := it.Next(); item != "" ; item = it.Next() {
 		words = append(words, &PrintedWord{
-			text: item,
-			width: MonoWidth(item),
+			Text: item,
+			Width: MonoWidth(item),
 		})
 	}
 	return words
